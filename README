@@ -1,2 +1,3 @@
 forked from thaytan/gst-rpicamsrc
 Plus added custom text from file text.txt to annotate temporary under shutter-settings
+if you use gstreamer rtsp server file text.txt need to in server folder 
