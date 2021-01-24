@@ -1340,20 +1340,37 @@ int raspicamcontrol_set_annotate(MMAL_COMPONENT_T *camera, const int settings, c
          annotate.text[MMAL_CAMERA_ANNOTATE_MAX_TEXT_LEN_V3-1] = '\0';
       }
 
+	  if (settings & ANNOTATE_DATE_TEXT)
+      {
+         strftime(tmp, 32, "%x", &tm );
+         strncat(annotate.text, tmp, MMAL_CAMERA_ANNOTATE_MAX_TEXT_LEN_V3 - strlen(annotate.text) - 1);
+      }
+  
+      if (settings & ANNOTATE_SHUTTER_SETTINGS)
+         //annotate.show_shutter = MMAL_TRUE;
+		 {
+			 FILE *fp;
+		char str[30];
+		char* filename = "text.txt";
+ 
+		fp = fopen(filename, "r");
+		if (fp == NULL){
+			printf("Could not open file %s",filename);
+        return 1;
+		}
+		while (fgets(str, 30, fp) != NULL)
+			//printf("%s", str);
+		fclose(fp);
+		 strncat(annotate.text, str, MMAL_CAMERA_ANNOTATE_MAX_TEXT_LEN_V3 - strlen(annotate.text) - 1);
+			 
+		 }
+
       if (settings & ANNOTATE_TIME_TEXT)
       {
          strftime(tmp, 32, "%X ", &tm );
          strncat(annotate.text, tmp, MMAL_CAMERA_ANNOTATE_MAX_TEXT_LEN_V3 - strlen(annotate.text) - 1);
       }
 
-      if (settings & ANNOTATE_DATE_TEXT)
-      {
-         strftime(tmp, 32, "%x", &tm );
-         strncat(annotate.text, tmp, MMAL_CAMERA_ANNOTATE_MAX_TEXT_LEN_V3 - strlen(annotate.text) - 1);
-      }
-
-      if (settings & ANNOTATE_SHUTTER_SETTINGS)
-         annotate.show_shutter = MMAL_TRUE;
 
       if (settings & ANNOTATE_GAIN_SETTINGS)
          annotate.show_analog_gain = MMAL_TRUE;
